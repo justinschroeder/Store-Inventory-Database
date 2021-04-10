@@ -25,10 +25,14 @@ def menu_loop():
 
     while choice != 'q':
         clear()
+        welcome = 'PRODUCT INVENTORY'
+        print(welcome)
+        print('-'*len(welcome))
         print('Enter "q" to quit.')
         for key, value in menu.items():
             print(f'{key}) {value.__doc__}')
         choice = input('Action: ').lower().strip()
+        print('-'*len(welcome))
 
         if choice in menu:
             clear()
