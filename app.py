@@ -25,20 +25,22 @@ def menu_loop():
 
     while choice != 'q':
         clear()
-        welcome = 'PRODUCT INVENTORY'
+        welcome = 'PRODUCT INVENTORY MANAGEMENT'
         print(welcome)
         print('-'*len(welcome))
-        print('Enter "q" to quit.')
+        print('Select an option below.')
+        print('Enter "q" to quit.\n')
         for key, value in menu.items():
             print(f'{key}) {value.__doc__}')
         choice = input('Action: ').lower().strip()
-        print('-'*len(welcome))
 
         if choice in menu:
             clear()
             menu[choice]()
         else:
-            print('\nThat is not a valid option.\nPlease try again.')
+            print('''\n***** INPUT ERROR *****
+            \rThat is not a valid option.
+            \rPlease try again.''')
             time.sleep(2)
 
 
