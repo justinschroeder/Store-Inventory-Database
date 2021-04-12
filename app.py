@@ -69,7 +69,7 @@ def clean_date(date_str):
         print('''
         \n**********DATE ERROR**********
         \rEnter Date as Month/Day/Year.
-        \rEx: 1/1/2021.
+        \rEx: 4/26/2021.
         \rPress enter to try again.''')
         return
     else:
