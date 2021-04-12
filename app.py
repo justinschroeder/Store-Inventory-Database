@@ -30,11 +30,15 @@ def menu_loop():
         print('Enter "q" to quit.\n')
         for key, value in menu.items():
             print(f'{key}) {value.__doc__}')
-        choice = input('Action: ').lower().strip()
+        choice = input('\nAction: ').lower().strip()
 
         if choice in menu:
             clear()
             menu[choice]()
+        elif choice =='q':
+            print('\nExiting...')
+            time.sleep(1.5)
+            clear()
         else:
             print('''\n***** INPUT ERROR *****
             \rThat is not a valid option.
@@ -95,8 +99,63 @@ def add_csv():
 
 
 def view_product():
-    """VIEW ENTRY BY ID"""
-    pass
+    """VIEW PRODUCT BY ID"""
+    choice = None
+
+    while choice != 'q':
+        print('''VIEW PRODUCT BY ID
+        \r------------------------
+        \rSelect and option below.
+        \rEnter 'q' to return to main menu.
+        \n1) View Product by ID
+        \r2) View all Products''')
+        choice = input('\nAction: ').lower().strip()
+        if choice == '1':
+            ids = []
+            for product in session.query(Product):
+                ids.append(product.product_id)
+            print(f'Product IDs: {ids}')
+            loop = True
+            while loop:
+                id = input('\nEnter Product ID: ')
+                product = session.query(Product).filter(Product.product_id == id).one_or_none()
+                if product != None:
+                    print(f'''\nProduct Name: {product.product_name}
+                    \rProduct Quantity: {product.product_quantity}
+                    \rPrice: ${float(product.product_price/100)}
+                    \rDate Last Updated: {product.date_updated}''')
+                    loop_choice = input("\nPress ENTER to view another Product.\nEnter 'q' to return.")
+                    if loop_choice != 'q':
+                        loop = True
+                    else:
+                        loop = False
+                        clear()
+                elif id == 'q':
+                    loop = False
+                    time.sleep(.5)
+                    clear()
+                else:
+                    print('''\n***** ID ERROR *****
+                    \rThat is not a valid Product ID.
+                    \rPlease try again.''')        
+        elif choice == '2':
+            products = session.query(Product).all()
+            for product in products:
+                print(f'''\nID: {product.product_id}
+                \rProduct Name: {product.product_name}
+                \rProduct Quantity: {product.product_quantity}
+                \rPrice: ${float(product.product_price/100)}
+                \rDate Last Updated: {product.date_updated}''')
+            input('\nPress ENTER to return to menu.')
+            clear()
+        elif choice == 'q':
+            time.sleep(.5)
+        else:
+            print('''\n***** INPUT ERROR *****
+            \rThat is not a valid option.
+            \rPlease try again.''')
+            time.sleep(1.5)
+            clear()
 
 
 def add_product():
@@ -117,7 +176,7 @@ menu = OrderedDict([
 
 if __name__== '__main__':
     Base.metadata.create_all(engine)
-    add_csv()
+    menu_loop()
 
 
 
