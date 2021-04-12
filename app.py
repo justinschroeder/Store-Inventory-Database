@@ -5,8 +5,6 @@
 # backup function (b)
 # OrderedDict for menu_loop
 
-from sqlalchemy.sql.coercions import expect_col_expression_collection
-from sqlalchemy.sql.expression import column
 from models import (Base, session, Product, engine)
 from collections import OrderedDict
 import csv
