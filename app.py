@@ -1,10 +1,3 @@
-# run the program
-# menu_loop function
-# add_product function (a)
-# view_product by id function (v)
-# backup function (b)
-# OrderedDict for menu_loop
-
 from models import (Base, session, Product, engine)
 from collections import OrderedDict
 import csv
@@ -81,20 +74,26 @@ def clean_date(date_str):
 def add_csv():
     with open('inventory.csv') as csv_file:
         data = csv.reader(csv_file)
+        product_list = []
         next(data)
+        product_id = 0
         for row in data:
-            in_db = session.query(Product).filter(Product.product_name==row[0]).one_or_none()
+            product_id = product_id + 1
+            product_name = row[0]
+            product_quantity = int(row[2])
+            product_price = int(float(row[1][1:])*100)
+            date_updated = clean_date(row[3])
+            product_dict = {'Product ID':product_id, 'Product Name':product_name, 'Product Quantity':product_quantity, 'Price':product_price, 'Date Updated':date_updated}
+            product_list.append(product_dict)
+        for product in product_list:
+            in_db = session.query(Product).filter(Product.product_name==product['Product Name']).one_or_none()
             if in_db == None:
-                product_name = row[0]
-                product_price = int(float(row[1][1:])*100)
-                product_quantity = int(row[2])
-                date_updated = clean_date(row[3])
-                new_product = Product(product_name=product_name, product_price=product_price, product_quantity=product_quantity, date_updated=date_updated)
+                new_product = Product(product_id=product['Product ID'], product_name=product['Product Name'], product_price=product['Price'], product_quantity=product['Product Quantity'], date_updated=product['Date Updated'])
                 session.add(new_product)
-            elif in_db.date_updated < clean_date(row[3]):
-                in_db.product_price = int(float(row[1][1:])*100)
-                in_db.product_quantity = int(row[2])
-                in_db.date_updated = clean_date(row[3])
+            elif in_db.date_updated < product['Date Updated']:
+                in_db.product_price = product['Price']
+                in_db.product_quantity = product['Product Quantity']
+                in_db.date_updated = product['Date Updated']
         session.commit()
 
 
@@ -176,6 +175,7 @@ menu = OrderedDict([
 
 if __name__== '__main__':
     Base.metadata.create_all(engine)
+    add_csv()
     menu_loop()
 
 
