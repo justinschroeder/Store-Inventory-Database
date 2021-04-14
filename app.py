@@ -39,18 +39,18 @@ def menu_loop():
             time.sleep(2)
 
 
-def clean_price(price_str):
-    try:
-        price_float = float(price_str)
-    except ValueError:
-        print('''
-        \n**********PRICE ERROR**********
-        \rEnter price as number without currency symbol.
-        \rEx: 10.99
-        \rPress enter to try again.''')
-        return
-    else:
-        return int(price_float * 100)
+# def clean_price(price_str):
+#     try:
+#         price_float = float(price_str)
+#     except ValueError:
+#         print('''
+#         \n**********PRICE ERROR**********
+#         \rEnter price as number without currency symbol.
+#         \rEx: 10.99
+#         \rPress enter to try again.''')
+#         return False
+#     else:
+#         return int(price_float * 100)
 
 
 def clean_date(date_str):
@@ -159,7 +159,69 @@ def view_product():
 
 def add_product():
     """ADD PRODUCT"""
-    pass
+    print('''ADD PRODUCT
+    \r------------------------
+    \rEnter Product information below.''')
+    while True:
+        product_name = input('\nEnter Product Name: ')
+        if product_name:
+            break
+        else:
+            print('''\n***** INPUT ERROR *****
+            \rYou must input a value.
+            \rPlease try again.''')
+            continue
+    while True:
+        try:
+            product_quantity = int(input('Enter Product Quantity as an interger: '))
+            break
+        except ValueError:
+            print('''
+            \n**********QUANTITY ERROR**********
+            \rEnter Quantity as an interger.
+            \rEx: 14.
+            \rPlease try again.''')
+            continue
+    while True:
+        try:
+            product_price = int(float(input('Enter Product Price as number with no currency symbols: '))*100)
+            break
+        except ValueError:
+            print('''
+            \n**********PRICE ERROR**********
+            \rEnter price as number without currency symbol.
+            \rEx: 10.99
+            \rPress enter to try again.''')
+            continue
+    in_db = session.query(Product).filter(Product.product_name==product_name).one_or_none()
+    if in_db == None:
+        new_product = Product(product_name=product_name, product_quantity=product_quantity, product_price=product_price, date_updated=datetime.date.today())
+        input(f'''\nPress ENTER to add the new product.''')
+        session.add(new_product)
+        print('\nProduct Added!')
+        time.sleep(1)
+    else:
+        print(f'''\nThat Product is already in inventory...
+        \rProduct Name: {in_db.product_name}
+        \rProduct Quantity: {in_db.product_quantity}
+        \rPrice: ${in_db.product_price/100}
+        \rDate Updated: {in_db.date_updated.strftime("%m/%d/%Y")}''')
+        choice = input('''\nWould you like to update?
+        \r[y/N] >> ''')
+        if choice == 'y'.lower():
+            in_db.product_quantity = product_quantity
+            in_db.product_price = product_price
+            in_db.date_updated = datetime.date.today()
+            print('\nProduct Updated!')
+            time.sleep(1)
+        else:
+            print('\nReturning to main menu...')
+            time.sleep(1)
+    session.commit()
+
+
+
+
 
 
 def backup():
