@@ -28,7 +28,7 @@ def menu_loop():
         if choice in menu:
             clear()
             menu[choice]()
-        elif choice =='q':
+        elif choice == 'q':
             print('\nExiting...')
             time.sleep(1.5)
             clear()
@@ -39,14 +39,13 @@ def menu_loop():
             time.sleep(2)
 
 
-
 def clean_date(date_str):
     split_date = date_str.split('/')
     try:
         month = int(split_date[0])
         day = int(split_date[1])
         year = int(split_date[2])
-        date = datetime.date(year,month,day)
+        date = datetime.date(year, month, day)
     except ValueError:
         print('''
         \n**********DATE ERROR**********
@@ -70,11 +69,11 @@ def add_csv():
             product_quantity = int(row[2])
             product_price = int(float(row[1][1:])*100)
             date_updated = clean_date(row[3])
-            product_dict = {'Product ID':product_id, 'Product Name':product_name, 'Product Quantity':product_quantity, 'Price':product_price, 'Date Updated':date_updated}
+            product_dict = {'Product ID': product_id, 'Product Name': product_name, 'Product Quantity': product_quantity, 'Price': product_price, 'Date Updated': date_updated}
             product_list.append(product_dict)
         for product in product_list:
-            in_db = session.query(Product).filter(Product.product_name==product['Product Name']).one_or_none()
-            if in_db == None:
+            in_db = session.query(Product).filter(Product.product_name == product['Product Name']).one_or_none()
+            if in_db is None:
                 new_product = Product(product_id=product['Product ID'], product_name=product['Product Name'], product_price=product['Price'], product_quantity=product['Product Quantity'], date_updated=product['Date Updated'])
                 session.add(new_product)
             elif in_db.date_updated < product['Date Updated']:
@@ -105,7 +104,7 @@ def view_product():
             while loop:
                 id = input('\nEnter Product ID: ')
                 product = session.query(Product).filter(Product.product_id == id).one_or_none()
-                if product != None:
+                if product is not None:
                     print(f'''\nProduct Name: {product.product_name}
                     \rProduct Quantity: {product.product_quantity}
                     \rPrice: ${float(product.product_price/100):.2f}
@@ -123,7 +122,7 @@ def view_product():
                 else:
                     print('''\n***** ID ERROR *****
                     \rThat is not a valid Product ID.
-                    \rPlease try again.''')        
+                    \rPlease try again.''')
         elif choice == '2':
             products = session.query(Product).all()
             for product in products:
@@ -180,8 +179,8 @@ def add_product():
             \rEx: 10.99
             \rPress enter to try again.''')
             continue
-    in_db = session.query(Product).filter(Product.product_name==product_name).one_or_none()
-    if in_db == None:
+    in_db = session.query(Product).filter(Product.product_name == product_name).one_or_none()
+    if in_db is None:
         new_product = Product(product_name=product_name, product_quantity=product_quantity, product_price=product_price, date_updated=datetime.date.today())
         input(f'''\nPress ENTER to add the new product.''')
         session.add(new_product)
@@ -229,10 +228,7 @@ menu = OrderedDict([
     ('b', backup),
 ])
 
-if __name__== '__main__':
+if __name__ == '__main__':
     Base.metadata.create_all(engine)
     add_csv()
     menu_loop()
-
-
-
