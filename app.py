@@ -121,7 +121,7 @@ def view_product():
                 if product != None:
                     print(f'''\nProduct Name: {product.product_name}
                     \rProduct Quantity: {product.product_quantity}
-                    \rPrice: ${float(product.product_price/100)}
+                    \rPrice: ${float(product.product_price/100):.2f}
                     \rDate Last Updated: {product.date_updated}''')
                     loop_choice = input("\nPress ENTER to view another Product.\nEnter 'q' to return.")
                     if loop_choice != 'q':
@@ -143,7 +143,7 @@ def view_product():
                 print(f'''\nID: {product.product_id}
                 \rProduct Name: {product.product_name}
                 \rProduct Quantity: {product.product_quantity}
-                \rPrice: ${float(product.product_price/100)}
+                \rPrice: ${float(product.product_price/100):.2f}
                 \rDate Last Updated: {product.date_updated}''')
             input('\nPress ENTER to return to menu.')
             clear()
@@ -204,7 +204,7 @@ def add_product():
         print(f'''\nThat Product is already in inventory...
         \rProduct Name: {in_db.product_name}
         \rProduct Quantity: {in_db.product_quantity}
-        \rPrice: ${in_db.product_price/100}
+        \rPrice: ${in_db.product_price/100:.2f}
         \rDate Updated: {in_db.date_updated.strftime("%m/%d/%Y")}''')
         choice = input('''\nWould you like to update?
         \r[y/N] >> ''')
@@ -220,13 +220,20 @@ def add_product():
     session.commit()
 
 
-
-
-
-
 def backup():
     """BACKUP INVENTORY"""
-    pass
+    all_products = session.query(Product).all()
+    headers = ['product_name', 'product_price', 'product_quantity', 'date_updated']
+    rows = []
+    for product in all_products:
+        row = [product.product_name, f'${product.product_price/100:.2f}', product.product_quantity, f'{product.date_updated.strftime("%m/%d/%Y")}']
+        rows.append(row)
+    with open('inventory_backup.csv', 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(headers)
+        csvwriter.writerows(rows)
+    print('Backup Created!')
+    time.sleep(1.5)
 
 
 menu = OrderedDict([
