@@ -39,19 +39,6 @@ def menu_loop():
             time.sleep(2)
 
 
-# def clean_price(price_str):
-#     try:
-#         price_float = float(price_str)
-#     except ValueError:
-#         print('''
-#         \n**********PRICE ERROR**********
-#         \rEnter price as number without currency symbol.
-#         \rEx: 10.99
-#         \rPress enter to try again.''')
-#         return False
-#     else:
-#         return int(price_float * 100)
-
 
 def clean_date(date_str):
     split_date = date_str.split('/')
