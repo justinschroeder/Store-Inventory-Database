@@ -12,7 +12,7 @@
  This repository contains a file names "requirements.txt". Run `pip install -r requirements.txt` in the project folder to install the required project dependencies.
 
  ## Project Learnings:
- Through this project, I learned how to initialize a SQLite Database using SQLAlchemy, create a Model Class for entries into a data, and how to query data from the database using SQLAlchemy ORM. 
+ Through this project, I learned how to initialize a SQLite Database using SQLAlchemy, create a Model Class for entries into a database, and how to query data from the database using SQLAlchemy ORM. 
 
 
 
